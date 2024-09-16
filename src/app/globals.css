@@ -2,6 +2,11 @@
   --default-font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   --paragraph-font-size: 1.6rem;
+
+  --primary-color: hsl(223, 87%, 63%);
+  --quaternary-color: hsl(0, 0%, 59%);
+  --quinary-color: hsl(209, 33%, 12%);
+  --white-color: hsl(0, 0%, 100%);
 }
 
 *,
