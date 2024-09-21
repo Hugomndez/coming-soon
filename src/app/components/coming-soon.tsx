@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import logo from '../../../public/images/logo.svg';
 import styles from './coming-soon.module.css';
 
 export default function ComingSoon() {
@@ -6,14 +8,11 @@ export default function ComingSoon() {
   return (
     <main className={styles.main}>
       <div className={styles.content}>
-        <img
-          src='/images/logo.svg'
-          alt='Ping logo'
-          width='86'
-          height='26'
-          decoding='async'
-          fetchPriority='high'
+        <Image
           className={styles.logo}
+          alt='Ping Logo'
+          src={logo}
+          priority
         />
         <h1 className={styles.title}>
           We are launching <span>soon!</span>
