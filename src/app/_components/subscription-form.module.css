@@ -1,0 +1,78 @@
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form input {
+  padding: 0.5rem 2rem;
+  width: 281px;
+  height: 40px;
+  color: hsl(209, 33%, 12%);
+  border-radius: 20px;
+  border: 1px solid hsl(223, 100%, 88%);
+  background-color: hsl(0, 0%, 100%);
+  caret-color: var(--primary-color);
+}
+
+.form input[data-invalid='true'] {
+  border: 1px solid hsl(354, 100%, 66%);
+}
+
+.form input::placeholder {
+  color: hsl(223, 60%, 83%);
+  font-weight: lighter;
+}
+
+.form button {
+  display: grid;
+  place-items: center;
+  border: none;
+  font-weight: bold;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  height: 40px;
+  border-radius: 20px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .form button:hover {
+    opacity: 0.8;
+  }
+}
+
+.message {
+  place-self: center;
+  font-size: 1.2rem;
+  color: hsl(123, 46%, 34%);
+}
+
+.error {
+  place-self: center;
+  font-size: 1.2rem;
+  color: hsl(354, 100%, 66%);
+}
+
+@media (min-width: 768px) {
+  .form {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .form input {
+    padding: 0.5rem 2rem;
+    width: 421px;
+    height: 56px;
+    border-radius: 50px;
+  }
+
+  .form button {
+    width: 200px;
+    height: 56px;
+    border-radius: 50px;
+  }
+
+  .message {
+    grid-column: 1 / 3;
+    font-size: 1.5rem;
+  }
+}

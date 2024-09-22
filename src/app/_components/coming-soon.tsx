@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import logo from '../../../public/images/logo.svg';
 import styles from './coming-soon.module.css';
+import SubscriptionForm from './subscription-form';
 
 export default function ComingSoon() {
   const currentYearDate = new Date().getFullYear();
@@ -18,7 +19,7 @@ export default function ComingSoon() {
           We are launching <span>soon!</span>
         </h1>
         <p className={styles.subTitle}>Subscribe and get notified</p>
-        {/* <SubscribeForm client:load /> */}
+        <SubscriptionForm />
       </div>
       <span className={styles.copyright}>
         &copy; {currentYearDate} Copyright Ping. All rights reserved.

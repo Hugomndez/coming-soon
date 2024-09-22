@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { libreFranklin } from './fonts';
-import './globals.css';
+import { libreFranklin } from './_fonts';
+import './_styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'Coming Soon!',
