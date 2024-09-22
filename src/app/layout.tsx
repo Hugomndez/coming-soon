@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Toaster } from 'react-hot-toast';
 import { libreFranklin } from './_fonts';
 import './_styles/globals.css';
 
@@ -16,7 +17,10 @@ export default function RootLayout({
     <html
       lang='en'
       dir='ltr'>
-      <body className={libreFranklin.className}>{children}</body>
+      <body className={libreFranklin.className}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

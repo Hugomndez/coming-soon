@@ -1,6 +1,7 @@
 import addSubscriptionAction from '@/app/_actions/addSubscriptionAction';
 import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
+import toast from 'react-hot-toast';
 import type { AddSubscriptionSchema } from '../_schemas/addSubscriptionSchema';
 import { addSubscriptionSchema } from '../_schemas/addSubscriptionSchema';
 import type { AddSubscriptionState, StringMap, StringToBooleanMap } from '../_types';
@@ -20,6 +21,7 @@ export function useSubscriptionForm() {
 
   useEffect(() => {
     if (serverState.successMessage) {
+      toast.success(serverState.successMessage);
       setBlurs({});
     } else if (serverState.errors) {
       setAllBlurred();
