@@ -16,7 +16,9 @@ export default async function addSubscriptionAction(
 
   if (!validationResult.success) {
     const errors = convertZodErrors(validationResult.error);
+
     return {
+      message: '',
       errors,
       data: subscriptionData,
       blurs: Object.fromEntries(Object.keys(subscriptionData).map((key) => [key, true])),
@@ -24,7 +26,9 @@ export default async function addSubscriptionAction(
   }
 
   return {
-    successMessage: 'Subscribed!',
+    message: 'Subscribed!',
+    errors: {},
+    blurs: {},
     data: {
       email: '',
     },

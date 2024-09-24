@@ -5,8 +5,9 @@ import SubmitButton from './submit-button';
 import styles from './subscription-form.module.css';
 
 export default function SubscriptionForm() {
-  const { errors, blurs, subscription, handleOnBlur, handleInputChange, formAction } =
-    useSubscriptionForm();
+  const { formState, handleOnBlur, handleInputChange, formAction } = useSubscriptionForm();
+
+  const isInvalid = !!formState.blurs?.email && !!formState.errors?.email;
 
   return (
     <form
@@ -21,16 +22,14 @@ export default function SubscriptionForm() {
           autoComplete='email'
           onBlur={handleOnBlur}
           onChange={handleInputChange}
-          value={subscription.email}
-          data-invalid={!!blurs.email && !!errors.email}
+          value={formState.data.email}
+          data-invalid={isInvalid}
         />
       </label>
 
       <SubmitButton />
 
-      <span className={styles.error}>
-        {blurs.email && errors?.email ? errors.email : <>&nbsp;</>}
-      </span>
+      <span className={styles.error}>{isInvalid ? formState.errors.email : <>&nbsp;</>}</span>
     </form>
   );
 }

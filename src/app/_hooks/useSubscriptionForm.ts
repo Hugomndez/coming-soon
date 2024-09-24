@@ -2,34 +2,37 @@ import addSubscriptionAction from '@/app/_actions/addSubscriptionAction';
 import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
-import type { AddSubscriptionSchema } from '../_schemas/addSubscriptionSchema';
 import { addSubscriptionSchema } from '../_schemas/addSubscriptionSchema';
-import type { AddSubscriptionState, StringMap, StringToBooleanMap } from '../_types';
+import type { AddSubscriptionState, StringToBooleanMap } from '../_types';
 import { convertZodErrors } from '../_utils';
 
 const inputNames = ['email'];
-const initialState: AddSubscriptionState = {};
-const initialData: AddSubscriptionSchema = { email: '' };
+const initialState: AddSubscriptionState = {
+  message: '',
+  errors: {},
+  blurs: {},
+  data: { email: '' },
+};
 
 export function useSubscriptionForm() {
   const [serverState, formAction] = useFormState(addSubscriptionAction, initialState);
-  const [errors, setErrors] = useState<StringMap>(serverState.errors || {});
-  const [blurs, setBlurs] = useState<StringToBooleanMap>(serverState.blurs || {});
-  const [subscription, setSubscription] = useState<AddSubscriptionSchema>(
-    serverState.data || initialData
-  );
+  const [formState, setFormState] = useState<AddSubscriptionState>(serverState);
 
   useEffect(() => {
-    if (serverState.successMessage) {
-      toast.success(serverState.successMessage);
-      setBlurs({});
-    } else if (serverState.errors) {
+    if (serverState.errors) {
       setAllBlurred();
     }
+
     if (serverState.data) {
-      setSubscription(serverState.data);
+      setFormState((prevState) => ({ ...prevState, data: serverState.data }));
     }
-    setErrors(serverState.errors || {});
+
+    if (serverState.message) {
+      toast.success(serverState.message);
+      setFormState((prevState) => ({ ...prevState, blurs: {} }));
+    }
+
+    setFormState((prevState) => ({ ...prevState, errors: serverState.errors || {} }));
   }, [serverState]);
 
   const setAllBlurred = () => {
@@ -37,37 +40,32 @@ export function useSubscriptionForm() {
     inputNames.forEach((name) => {
       blurred[name] = true;
     });
-    setBlurs(blurred);
+    setFormState((prevState) => ({ ...prevState, blurs: blurred }));
   };
 
   const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const { name } = event.target;
-    setBlurs((prev) => ({ ...prev, [name]: true }));
+    setFormState((prevState) => ({ ...prevState, blurs: { ...prevState.blurs, [name]: true } }));
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    setSubscription((prevSubscription) => {
-      const updatedSubscription = { ...prevSubscription, [name]: value };
-      const validatedResult = addSubscriptionSchema.safeParse(updatedSubscription);
+    setFormState((prevState) => {
+      const updatedFormState = { ...prevState, data: { ...prevState.data, [name]: value } };
+      const validatedResult = addSubscriptionSchema.safeParse(updatedFormState.data);
 
       if (!validatedResult.success) {
         const validationErrors = convertZodErrors(validatedResult.error);
-        setErrors(validationErrors);
-      } else {
-        setErrors({});
+        return { ...updatedFormState, errors: validationErrors };
       }
 
-      return updatedSubscription;
+      return { ...updatedFormState, errors: {} };
     });
   };
 
   return {
-    serverState,
-    errors,
-    blurs,
-    subscription,
+    formState,
     handleOnBlur,
     handleInputChange,
     formAction,
