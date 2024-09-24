@@ -5,13 +5,14 @@ import SubmitButton from './submit-button';
 import styles from './subscription-form.module.css';
 
 export default function SubscriptionForm() {
-  const { formState, handleOnBlur, handleInputChange, formAction } = useSubscriptionForm();
+  const { formRef, formState, handleOnBlur, handleInputChange, formAction } = useSubscriptionForm();
 
   const isInvalid = !!formState.blurs?.email && !!formState.errors?.email;
 
   return (
     <form
       className={styles.form}
+      ref={formRef}
       action={formAction}>
       <label htmlFor='email'>
         <input

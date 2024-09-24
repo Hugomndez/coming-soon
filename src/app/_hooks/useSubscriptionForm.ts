@@ -1,12 +1,11 @@
 import addSubscriptionAction from '@/app/_actions/addSubscriptionAction';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { addSubscriptionSchema } from '../_schemas/addSubscriptionSchema';
 import type { AddSubscriptionState, StringToBooleanMap } from '../_types';
 import { convertZodErrors } from '../_utils';
 
-const inputNames = ['email'];
 const initialState: AddSubscriptionState = {
   message: '',
   errors: {},
@@ -15,8 +14,24 @@ const initialState: AddSubscriptionState = {
 };
 
 export function useSubscriptionForm() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [serverState, formAction] = useFormState(addSubscriptionAction, initialState);
   const [formState, setFormState] = useState<AddSubscriptionState>(serverState);
+
+  const setAllBlurred = useCallback(() => {
+    if (formRef.current) {
+      const inputNames = Array.from(formRef.current.elements)
+        .filter((element): element is HTMLInputElement => element.tagName === 'INPUT')
+        .map((input) => input.name);
+
+      const blurred: StringToBooleanMap = inputNames.reduce((acc, name) => {
+        acc[name] = true;
+        return acc;
+      }, {} as StringToBooleanMap);
+
+      setFormState((prevState) => ({ ...prevState, blurs: blurred }));
+    }
+  }, []);
 
   useEffect(() => {
     if (serverState.errors) {
@@ -33,22 +48,14 @@ export function useSubscriptionForm() {
     }
 
     setFormState((prevState) => ({ ...prevState, errors: serverState.errors || {} }));
-  }, [serverState]);
+  }, [serverState, setAllBlurred]);
 
-  const setAllBlurred = () => {
-    const blurred: StringToBooleanMap = {};
-    inputNames.forEach((name) => {
-      blurred[name] = true;
-    });
-    setFormState((prevState) => ({ ...prevState, blurs: blurred }));
-  };
-
-  const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleOnBlur = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
     const { name } = event.target;
     setFormState((prevState) => ({ ...prevState, blurs: { ...prevState.blurs, [name]: true } }));
-  };
+  }, []);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     setFormState((prevState) => {
@@ -62,9 +69,10 @@ export function useSubscriptionForm() {
 
       return { ...updatedFormState, errors: {} };
     });
-  };
+  }, []);
 
   return {
+    formRef,
     formState,
     handleOnBlur,
     handleInputChange,
