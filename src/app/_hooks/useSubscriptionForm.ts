@@ -1,12 +1,12 @@
-import addSubscriptionAction from '@/app/_actions/addSubscriptionAction';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import subscriptionAction from '@/app/_actions/subscriptionAction';
+import { useCallback, useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
-import { addSubscriptionSchema } from '../_schemas/addSubscriptionSchema';
-import type { AddSubscriptionState, StringToBooleanMap } from '../_types';
-import { convertZodErrors } from '../_utils';
+import { subscriptionSchema } from '../_schemas/subscriptionSchema';
+import type { SubscriptionState } from '../_types';
+import { blurAllFormFields, convertZodErrors } from '../_utils';
 
-const initialState: AddSubscriptionState = {
+const initialState: SubscriptionState = {
   message: '',
   errors: {},
   blurs: {},
@@ -14,41 +14,28 @@ const initialState: AddSubscriptionState = {
 };
 
 export function useSubscriptionForm() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [serverState, formAction] = useFormState(addSubscriptionAction, initialState);
-  const [formState, setFormState] = useState<AddSubscriptionState>(serverState);
-
-  const setAllBlurred = useCallback(() => {
-    if (formRef.current) {
-      const inputNames = Array.from(formRef.current.elements)
-        .filter((element): element is HTMLInputElement => element.tagName === 'INPUT')
-        .map((input) => input.name);
-
-      const blurred: StringToBooleanMap = inputNames.reduce((acc, name) => {
-        acc[name] = true;
-        return acc;
-      }, {} as StringToBooleanMap);
-
-      setFormState((prevState) => ({ ...prevState, blurs: blurred }));
-    }
-  }, []);
+  const [subscriptionState, formAction] = useFormState(subscriptionAction, initialState);
+  const [formState, setFormState] = useState<SubscriptionState>(subscriptionState);
 
   useEffect(() => {
-    if (serverState.errors) {
-      setAllBlurred();
+    setFormState((prevState) => ({
+      ...prevState,
+      data: subscriptionState.data,
+      blurs: subscriptionState.blurs,
+      errors: subscriptionState.errors,
+      message: subscriptionState.message,
+    }));
+
+    if (subscriptionState.errors) {
+      const blurs = blurAllFormFields(subscriptionSchema.shape);
+
+      setFormState((prevState) => ({ ...prevState, blurs }));
     }
 
-    if (serverState.data) {
-      setFormState((prevState) => ({ ...prevState, data: serverState.data }));
+    if (subscriptionState.message) {
+      toast.success(subscriptionState.message);
     }
-
-    if (serverState.message) {
-      toast.success(serverState.message);
-      setFormState((prevState) => ({ ...prevState, blurs: {} }));
-    }
-
-    setFormState((prevState) => ({ ...prevState, errors: serverState.errors || {} }));
-  }, [serverState, setAllBlurred]);
+  }, [subscriptionState]);
 
   const handleOnBlur = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
     const { name } = event.target;
@@ -59,23 +46,23 @@ export function useSubscriptionForm() {
     const { name, value } = event.target;
 
     setFormState((prevState) => {
-      const updatedFormState = { ...prevState, data: { ...prevState.data, [name]: value } };
-      const validatedResult = addSubscriptionSchema.safeParse(updatedFormState.data);
+      const newState = { ...prevState, data: { ...prevState.data, [name]: value } };
+      const parsedResult = subscriptionSchema.safeParse(newState.data);
 
-      if (!validatedResult.success) {
-        const validationErrors = convertZodErrors(validatedResult.error);
-        return { ...updatedFormState, errors: validationErrors };
+      if (!parsedResult.success) {
+        const errors = convertZodErrors(parsedResult.error);
+
+        return { ...newState, errors };
       }
 
-      return { ...updatedFormState, errors: {} };
+      return { ...newState, errors: {} };
     });
   }, []);
 
   return {
-    formRef,
     formState,
+    formAction,
     handleOnBlur,
     handleInputChange,
-    formAction,
   };
 }
