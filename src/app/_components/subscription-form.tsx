@@ -20,7 +20,7 @@ export default function SubscriptionForm() {
           type='text'
           name='email'
           placeholder='Your email address...'
-          autoComplete='email'
+          autoComplete='on'
           onBlur={handleOnBlur}
           onChange={handleInputChange}
           value={formState.data.email}
