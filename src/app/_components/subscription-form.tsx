@@ -27,7 +27,7 @@ export default function SubscriptionForm() {
         />
       </label>
 
-      <SubmitButton />
+      <SubmitButton defaultText='Notify Me' />
 
       <span className={styles.error}>{isInvalid ? formState.errors.email : <>&nbsp;</>}</span>
     </form>
