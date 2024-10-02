@@ -1,5 +1,5 @@
-import { StringMap, StringToBooleanMap } from '@/app/_types';
 import { ZodError, ZodRawShape } from 'zod';
+import { StringMap, StringToBooleanMap } from './subscription-form.types';
 
 export const convertZodErrors = (error: ZodError): StringMap => {
   return error.issues.reduce((acc: { [key: string]: string }, issue) => {

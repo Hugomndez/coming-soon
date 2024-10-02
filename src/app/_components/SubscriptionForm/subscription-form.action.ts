@@ -1,20 +1,17 @@
 'use server';
-
-import { subscriptionSchema } from '../_schemas/subscriptionSchema';
-import { SubscriptionState } from '../_types';
-import { blurAllFormFields, convertZodErrors } from '../_utils';
+import subscriptionSchema from './subscription-form.schema';
+import type { SubscriptionState } from './subscription-form.types';
+import { blurAllFormFields, convertZodErrors } from './subscription-form.utils';
 
 export default async function subscriptionAction(
   prevState: SubscriptionState,
   formData: FormData
 ): Promise<SubscriptionState> {
-  const data = {
+  const formPayload = {
     email: formData.get('email') as string,
   };
 
-  console.log(data);
-
-  const parsedResult = subscriptionSchema.safeParse(data);
+  const parsedResult = subscriptionSchema.safeParse(formPayload);
 
   if (!parsedResult.success) {
     const errors = convertZodErrors(parsedResult.error);
@@ -23,7 +20,7 @@ export default async function subscriptionAction(
     return {
       message: '',
       errors,
-      data,
+      form: formPayload,
       blurs,
     };
   }
@@ -32,7 +29,7 @@ export default async function subscriptionAction(
     message: 'Subscribed!',
     errors: {},
     blurs: {},
-    data: {
+    form: {
       email: '',
     },
   };

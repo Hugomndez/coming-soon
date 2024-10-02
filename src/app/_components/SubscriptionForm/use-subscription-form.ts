@@ -1,26 +1,26 @@
-import subscriptionAction from '@/app/_actions/subscriptionAction';
 import { useCallback, useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
-import { subscriptionSchema } from '../_schemas/subscriptionSchema';
-import type { SubscriptionState } from '../_types';
-import { blurAllFormFields, convertZodErrors } from '../_utils';
+import subscriptionAction from './subscription-form.action';
+import subscriptionSchema from './subscription-form.schema';
+import type { SubscriptionState } from './subscription-form.types';
+import { blurAllFormFields, convertZodErrors } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
   message: '',
   errors: {},
   blurs: {},
-  data: { email: '' },
+  form: { email: '' },
 };
 
-export function useSubscriptionForm() {
+export default function useSubscriptionForm() {
   const [subscriptionState, formAction] = useFormState(subscriptionAction, initialState);
   const [formState, setFormState] = useState<SubscriptionState>(subscriptionState);
 
   useEffect(() => {
     setFormState((prevState) => ({
       ...prevState,
-      data: subscriptionState.data,
+      form: subscriptionState.form,
       blurs: subscriptionState.blurs,
       errors: subscriptionState.errors,
       message: subscriptionState.message,
@@ -46,8 +46,8 @@ export function useSubscriptionForm() {
     const { name, value } = event.target;
 
     setFormState((prevState) => {
-      const newState = { ...prevState, data: { ...prevState.data, [name]: value } };
-      const parsedResult = subscriptionSchema.safeParse(newState.data);
+      const newState = { ...prevState, form: { ...prevState.form, [name]: value } };
+      const parsedResult = subscriptionSchema.safeParse(newState.form);
 
       if (!parsedResult.success) {
         const errors = convertZodErrors(parsedResult.error);

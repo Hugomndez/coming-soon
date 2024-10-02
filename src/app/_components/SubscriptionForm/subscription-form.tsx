@@ -1,13 +1,12 @@
 'use client';
-
-import { useSubscriptionForm } from '../_hooks/useSubscriptionForm';
-import SubmitButton from './submit-button';
+import { FieldErrorMessage, SubmitButton } from '@/app/_components/ui';
 import styles from './subscription-form.module.css';
+import useSubscriptionForm from './use-subscription-form';
 
 export default function SubscriptionForm() {
   const { formState, formAction, handleOnBlur, handleInputChange } = useSubscriptionForm();
 
-  const isInvalid = !!formState.blurs?.email && !!formState.errors?.email;
+  const isEmailInvalid = !!formState.blurs?.email && !!formState.errors?.email;
 
   return (
     <form
@@ -22,14 +21,18 @@ export default function SubscriptionForm() {
           autoComplete='on'
           onBlur={handleOnBlur}
           onChange={handleInputChange}
-          value={formState.data.email}
-          data-invalid={isInvalid}
+          value={formState.form.email}
+          data-invalid={isEmailInvalid}
         />
       </label>
 
       <SubmitButton defaultText='Notify Me' />
 
-      <span className={styles.error}>{isInvalid ? formState.errors.email : <>&nbsp;</>}</span>
+      <FieldErrorMessage
+        className={styles.errorMessage}
+        hasError={isEmailInvalid}
+        errorMessage={formState.errors.email}
+      />
     </form>
   );
 }

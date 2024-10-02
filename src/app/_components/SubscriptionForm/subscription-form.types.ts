@@ -1,10 +1,10 @@
-import { SubscriptionSchema } from '../_schemas/subscriptionSchema';
+import { SubscriptionSchema } from './subscription-form.schema';
 
 export interface SubscriptionState {
   message: string;
   errors: StringMap;
   blurs: StringToBooleanMap;
-  data: SubscriptionSchema;
+  form: SubscriptionSchema;
 }
 
 export interface StringMap {

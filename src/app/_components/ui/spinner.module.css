@@ -9,7 +9,7 @@
 
 .spinner {
   z-index: 1;
-  border: 2px solid var(--white-color);
+  border: 2px solid hsl(0, 0%, 100%);
   border-top: 2px solid hsla(212, 100%, 69%, 0.5);
   border-radius: 50%;
   width: 20px;

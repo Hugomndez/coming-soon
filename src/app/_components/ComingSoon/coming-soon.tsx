@@ -1,7 +1,7 @@
+import logo from '@/public/images/logo.svg';
 import Image from 'next/image';
-import logo from '../../../public/images/logo.svg';
+import { SubscriptionForm } from '../SubscriptionForm';
 import styles from './coming-soon.module.css';
-import SubscriptionForm from './subscription-form';
 
 export default function ComingSoon() {
   const currentYearDate = new Date().getFullYear();
