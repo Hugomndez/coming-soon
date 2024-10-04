@@ -18,6 +18,7 @@ export default async function subscriptionAction(
     const blurs = blurAllFormFields(subscriptionSchema.shape);
 
     return {
+      status: 'error',
       message: '',
       errors,
       form: formPayload,
@@ -26,6 +27,7 @@ export default async function subscriptionAction(
   }
 
   return {
+    status: 'success',
     message: 'Subscribed!',
     errors: {},
     blurs: {},

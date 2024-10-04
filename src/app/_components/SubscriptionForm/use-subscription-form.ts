@@ -4,9 +4,10 @@ import toast from 'react-hot-toast';
 import subscriptionAction from './subscription-form.action';
 import subscriptionSchema from './subscription-form.schema';
 import type { SubscriptionState } from './subscription-form.types';
-import { blurAllFormFields, convertZodErrors } from './subscription-form.utils';
+import { convertZodErrors } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
+  status: 'default',
   message: '',
   errors: {},
   blurs: {},
@@ -18,23 +19,20 @@ export default function useSubscriptionForm() {
   const [formState, setFormState] = useState<SubscriptionState>(subscriptionState);
 
   useEffect(() => {
+    if (subscriptionState.status === 'success') {
+      toast.success(subscriptionState.message);
+      setFormState(initialState);
+      return;
+    }
+
     setFormState((prevState) => ({
       ...prevState,
+      status: subscriptionState.status,
       form: subscriptionState.form,
       blurs: subscriptionState.blurs,
       errors: subscriptionState.errors,
       message: subscriptionState.message,
     }));
-
-    if (subscriptionState.errors) {
-      const blurs = blurAllFormFields(subscriptionSchema.shape);
-
-      setFormState((prevState) => ({ ...prevState, blurs }));
-    }
-
-    if (subscriptionState.message) {
-      toast.success(subscriptionState.message);
-    }
   }, [subscriptionState]);
 
   const handleOnBlur = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
@@ -52,10 +50,10 @@ export default function useSubscriptionForm() {
       if (!parsedResult.success) {
         const errors = convertZodErrors(parsedResult.error);
 
-        return { ...newState, errors };
+        return { ...newState, errors, status: 'error' };
       }
 
-      return { ...newState, errors: {} };
+      return { ...newState, blurs: {}, errors: {}, status: 'isValid' };
     });
   }, []);
 

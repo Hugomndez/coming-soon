@@ -1,6 +1,7 @@
 import { SubscriptionSchema } from './subscription-form.schema';
 
 export interface SubscriptionState {
+  status: 'default' | 'error' | 'isValid' | 'success';
   message: string;
   errors: StringMap;
   blurs: StringToBooleanMap;
