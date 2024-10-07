@@ -31,7 +31,9 @@ export default function useSubscriptionForm() {
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
       const { name } = event.target;
-      setFormState((draft) => (draft.blurs[name] = true));
+      setFormState((draft) => {
+        draft.blurs[name] = true;
+      });
     },
     [setFormState]
   );
