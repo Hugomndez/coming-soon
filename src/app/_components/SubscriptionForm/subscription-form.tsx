@@ -4,9 +4,7 @@ import styles from './subscription-form.module.css';
 import useSubscriptionForm from './use-subscription-form';
 
 export default function SubscriptionForm() {
-  const { formState, formAction, handleOnBlur, handleInputChange } = useSubscriptionForm();
-
-  const isEmailInvalid = !!formState.blurs?.email && !!formState.errors?.email;
+  const { formState, formAction, handleBlur, handleChange } = useSubscriptionForm();
 
   return (
     <form
@@ -19,10 +17,10 @@ export default function SubscriptionForm() {
           name='email'
           placeholder='Your email address...'
           autoComplete='on'
-          onBlur={handleOnBlur}
-          onChange={handleInputChange}
+          onBlur={handleBlur}
+          onChange={handleChange}
           value={formState.form.email}
-          data-invalid={isEmailInvalid}
+          data-invalid={formState.blurs.email && !!formState.errors.email}
         />
       </label>
 
@@ -30,7 +28,7 @@ export default function SubscriptionForm() {
 
       <FieldErrorMessage
         className={styles.errorMessage}
-        hasError={isEmailInvalid}
+        hasError={formState.blurs.email && !!formState.errors.email}
         errorMessage={formState.errors.email}
       />
     </form>

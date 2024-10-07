@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import subscriptionAction from './subscription-form.action';
-import subscriptionSchema from './subscription-form.schema';
+import subscriptionFormSchema from './subscription-form.schema';
 import type { SubscriptionState } from './subscription-form.types';
 import { convertZodErrors } from './subscription-form.utils';
 
@@ -25,42 +25,33 @@ export default function useSubscriptionForm() {
       return;
     }
 
-    setFormState((prevState) => ({
-      ...prevState,
-      status: subscriptionState.status,
-      form: subscriptionState.form,
-      blurs: subscriptionState.blurs,
-      errors: subscriptionState.errors,
-      message: subscriptionState.message,
-    }));
+    setFormState(subscriptionState);
   }, [subscriptionState]);
 
-  const handleOnBlur = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
-    const { name } = event.target;
+  const handleBlur = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = event.currentTarget;
     setFormState((prevState) => ({ ...prevState, blurs: { ...prevState.blurs, [name]: true } }));
   }, []);
 
-  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
     setFormState((prevState) => {
       const newState = { ...prevState, form: { ...prevState.form, [name]: value } };
-      const parsedResult = subscriptionSchema.safeParse(newState.form);
+      const parsedResult = subscriptionFormSchema.safeParse(newState.form);
 
       if (!parsedResult.success) {
         const errors = convertZodErrors(parsedResult.error);
-
         return { ...newState, errors, status: 'error' };
       }
 
-      return { ...newState, blurs: {}, errors: {}, status: 'isValid' };
+      return { ...newState, errors: {}, status: 'isValid' };
     });
   }, []);
 
   return {
     formState,
     formAction,
-    handleOnBlur,
-    handleInputChange,
+    handleBlur,
+    handleChange,
   };
 }
