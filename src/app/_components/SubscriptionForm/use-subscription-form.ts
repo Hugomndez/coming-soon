@@ -8,7 +8,7 @@ import type { SubscriptionState } from './subscription-form.types';
 import { convertZodErrors } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
-  status: 'default',
+  status: 'initial',
   message: '',
   errors: {},
   blurs: {},
@@ -20,12 +20,12 @@ export default function useSubscriptionForm() {
   const [formState, setFormState] = useImmer<SubscriptionState>(subscriptionState);
 
   useEffect(() => {
-    if (subscriptionState.status === 'success') {
-      toast.success(subscriptionState.message);
-      setFormState(initialState);
-    } else {
-      setFormState(subscriptionState);
-    }
+    const statusHandler: { [key: string]: () => void } = {
+      success: () => (toast.success(subscriptionState.message), setFormState(initialState)),
+      default: () => setFormState(subscriptionState),
+    };
+
+    (statusHandler[subscriptionState.status] || statusHandler.default)();
   }, [subscriptionState, setFormState]);
 
   const handleBlur = useCallback(
@@ -45,14 +45,8 @@ export default function useSubscriptionForm() {
       setFormState((draft) => {
         draft.form[name] = value;
         const parsedResult = subscriptionFormSchema.safeParse(draft.form);
-
-        if (!parsedResult.success) {
-          draft.errors = convertZodErrors(parsedResult.error);
-          draft.status = 'error';
-        } else {
-          draft.errors = {};
-          draft.status = 'isValid';
-        }
+        draft.errors = parsedResult.success ? {} : convertZodErrors(parsedResult.error);
+        draft.status = parsedResult.success ? 'valid' : 'error';
       });
     },
     [setFormState]
