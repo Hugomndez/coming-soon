@@ -1,38 +1,38 @@
 'use server';
-import subscriptionFormSchema from './subscription-form.schema';
-import type { SubscriptionState } from './subscription-form.types';
-import { blurAllFormFields, convertZodErrors } from './subscription-form.utils';
+import subscriptionFormSchema, { type SubscriptionForm } from './subscription-form.schema';
+import { SubscriptionStatus, type SubscriptionState } from './subscription-form.types';
+import { blurAllFormFields, formatZodErrors } from './subscription-form.utils';
 
 export default async function subscriptionAction(
   prevState: SubscriptionState,
   formData: FormData
 ): Promise<SubscriptionState> {
-  const formPayload = {
-    email: formData.get('email') as string,
-  };
+  const formDataObject = Object.fromEntries(formData.entries());
 
-  const parsedResult = subscriptionFormSchema.safeParse(formPayload);
+  const validationResult = subscriptionFormSchema.safeParse(formDataObject);
 
-  if (!parsedResult.success) {
-    const errors = convertZodErrors(parsedResult.error);
-    const blurs = blurAllFormFields(subscriptionFormSchema.shape);
+  if (!validationResult.success) {
+    const validationErrors = formatZodErrors(validationResult.error);
+    const blurredFields = blurAllFormFields(subscriptionFormSchema.shape);
 
     return {
-      status: 'error',
+      status: SubscriptionStatus.Error,
       message: '',
-      errors,
-      form: formPayload,
-      blurs,
+      form: {
+        data: formDataObject as SubscriptionForm,
+        errors: validationErrors,
+        blurs: blurredFields,
+      },
     };
   }
 
   return {
-    status: 'success',
+    status: SubscriptionStatus.Success,
     message: 'Subscribed!',
-    errors: {},
-    blurs: {},
     form: {
-      email: '',
+      data: { email: '' },
+      errors: {},
+      blurs: {},
     },
   };
 }

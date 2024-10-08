@@ -1,11 +1,20 @@
 import { SubscriptionForm } from './subscription-form.schema';
 
 export interface SubscriptionState {
-  status: 'initial' | 'error' | 'valid' | 'success';
+  status: SubscriptionStatus;
   message: string;
-  errors: StringMap;
-  blurs: StringToBooleanMap;
-  form: SubscriptionForm;
+  form: {
+    data: SubscriptionForm;
+    errors: StringMap;
+    blurs: StringToBooleanMap;
+  };
+}
+
+export enum SubscriptionStatus {
+  Initial = 'initial',
+  Error = 'error',
+  Valid = 'valid',
+  Success = 'success',
 }
 
 export interface StringMap {

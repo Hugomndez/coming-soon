@@ -3,16 +3,14 @@ import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
-import subscriptionFormSchema, { type SubscriptionForm } from './subscription-form.schema';
-import type { SubscriptionState } from './subscription-form.types';
-import { convertZodErrors } from './subscription-form.utils';
+import { type SubscriptionForm } from './subscription-form.schema';
+import { type SubscriptionState, SubscriptionStatus } from './subscription-form.types';
+import { validateForm } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
-  status: 'initial',
+  status: SubscriptionStatus.Initial,
   message: '',
-  errors: {},
-  blurs: {},
-  form: { email: '' },
+  form: { data: { email: '' }, errors: {}, blurs: {} },
 };
 
 export default function useSubscriptionForm() {
@@ -20,20 +18,17 @@ export default function useSubscriptionForm() {
   const [formState, setFormState] = useImmer<SubscriptionState>(subscriptionState);
 
   useEffect(() => {
-    const statusHandler: { [key: string]: () => void } = {
-      success: () => (toast.success(subscriptionState.message), setFormState(initialState)),
+    const handleStatus: { [key: string]: () => void } = {
+      success: () => (setFormState(initialState), toast.success(subscriptionState.message)),
       default: () => setFormState(subscriptionState),
     };
-
-    (statusHandler[subscriptionState.status] || statusHandler.default)();
+    (handleStatus[subscriptionState.status] || handleStatus.default)();
   }, [subscriptionState, setFormState]);
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
       const { name } = event.target;
-      setFormState((draft) => {
-        draft.blurs[name] = true;
-      });
+      setFormState((draft) => void (draft.form.blurs[name] = true));
     },
     [setFormState]
   );
@@ -41,12 +36,11 @@ export default function useSubscriptionForm() {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target as { name: keyof SubscriptionForm; value: string };
-
       setFormState((draft) => {
-        draft.form[name] = value;
-        const parsedResult = subscriptionFormSchema.safeParse(draft.form);
-        draft.errors = parsedResult.success ? {} : convertZodErrors(parsedResult.error);
-        draft.status = parsedResult.success ? 'valid' : 'error';
+        draft.form.data[name] = value;
+        const { errors, status } = validateForm(draft.form.data);
+        draft.form.errors = errors;
+        draft.status = status;
       });
     },
     [setFormState]

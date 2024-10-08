@@ -19,8 +19,8 @@ export default function SubscriptionForm() {
           autoComplete='on'
           onBlur={handleBlur}
           onChange={handleChange}
-          value={formState.form.email}
-          data-invalid={formState.blurs.email && !!formState.errors.email}
+          value={formState.form.data.email}
+          data-invalid={formState.form.blurs.email && !!formState.form.errors.email}
         />
       </label>
 
@@ -28,8 +28,8 @@ export default function SubscriptionForm() {
 
       <FieldErrorMessage
         className={styles.errorMessage}
-        hasError={formState.blurs.email && !!formState.errors.email}
-        errorMessage={formState.errors.email}
+        hasError={formState.form.blurs.email && !!formState.form.errors.email}
+        errorMessage={formState.form.errors.email}
       />
     </form>
   );
