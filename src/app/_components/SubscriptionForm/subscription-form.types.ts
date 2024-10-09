@@ -1,13 +1,13 @@
 import type { FilteredFlattenedErrors, SubscriptionForm } from './subscription-form.schema';
 
-export interface SubscriptionState {
+export type SubscriptionState = {
   status: SubscriptionStatus;
   message: string;
   form: {
     data: SubscriptionForm;
     blurs: StringToBooleanMap;
   } & FilteredFlattenedErrors;
-}
+};
 
 export enum SubscriptionStatus {
   Initial = 'initial',
@@ -16,6 +16,10 @@ export enum SubscriptionStatus {
   Success = 'success',
 }
 
-export interface StringToBooleanMap {
+export type StringToBooleanMap = {
   [key: string]: boolean;
-}
+};
+
+export type FormEventTarget = {
+  [K in keyof SubscriptionForm]: { name: K; value: SubscriptionForm[K] };
+}[keyof SubscriptionForm];

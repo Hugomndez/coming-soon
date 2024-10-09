@@ -3,8 +3,7 @@ import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
-import { SubscriptionForm } from './subscription-form.schema';
-import { type SubscriptionState, SubscriptionStatus } from './subscription-form.types';
+import { FormEventTarget, SubscriptionState, SubscriptionStatus } from './subscription-form.types';
 import { validateForm } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
@@ -35,7 +34,7 @@ export default function useSubscriptionForm() {
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target as { name: keyof SubscriptionForm; value: string };
+      const { name, value } = event.target as FormEventTarget;
       setFormState((draft) => {
         draft.form.data[name] = value;
         const { fieldErrors, status } = validateForm(draft.form.data);

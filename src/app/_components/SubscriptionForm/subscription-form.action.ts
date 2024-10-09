@@ -19,7 +19,7 @@ export default async function subscriptionAction(
       status: SubscriptionStatus.Error,
       message: '',
       form: {
-        data: formDataObject as SubscriptionForm,
+        data: formDataObject as unknown as SubscriptionForm,
         fieldErrors,
         blurs: blurredFields,
       },
