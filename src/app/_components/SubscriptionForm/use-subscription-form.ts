@@ -1,9 +1,11 @@
+import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback, useEffect } from 'react';
 import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
-import { FormEventTarget, SubscriptionState, SubscriptionStatus } from './subscription-form.types';
+import type { FormEventTarget, SubscriptionState } from './subscription-form.types';
+import { SubscriptionStatus } from './subscription-form.types';
 import { validateForm } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
@@ -25,7 +27,7 @@ export default function useSubscriptionForm() {
   }, [subscriptionState, setFormState]);
 
   const handleBlur = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) => {
+    (event: FocusEvent<HTMLInputElement>) => {
       const { name } = event.target;
       setFormState((draft) => void (draft.form.blurs[name] = true));
     },
@@ -33,7 +35,7 @@ export default function useSubscriptionForm() {
   );
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target as FormEventTarget;
       setFormState((draft) => {
         draft.form.data[name] = value;

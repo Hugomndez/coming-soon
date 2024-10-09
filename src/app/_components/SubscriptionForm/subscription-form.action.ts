@@ -1,5 +1,7 @@
 'use server';
-import subscriptionFormSchema, { type SubscriptionForm } from './subscription-form.schema';
+
+import type { SubscriptionForm } from './subscription-form.schema';
+import subscriptionFormSchema from './subscription-form.schema';
 import { SubscriptionStatus, type SubscriptionState } from './subscription-form.types';
 import { blurAllFormFields } from './subscription-form.utils';
 

@@ -1,4 +1,4 @@
-import { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './spinner';
 

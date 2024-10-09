@@ -1,4 +1,4 @@
-import { ZodRawShape } from 'zod';
+import type { ZodRawShape } from 'zod';
 import subscriptionFormSchema from './subscription-form.schema';
 import { SubscriptionStatus, type StringToBooleanMap } from './subscription-form.types';
 
