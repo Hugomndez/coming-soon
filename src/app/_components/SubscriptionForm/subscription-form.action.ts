@@ -1,10 +1,10 @@
 'use server';
 import subscriptionFormSchema, { type SubscriptionForm } from './subscription-form.schema';
 import { SubscriptionStatus, type SubscriptionState } from './subscription-form.types';
-import { blurAllFormFields, formatZodErrors } from './subscription-form.utils';
+import { blurAllFormFields } from './subscription-form.utils';
 
 export default async function subscriptionAction(
-  prevState: SubscriptionState,
+  _: SubscriptionState,
   formData: FormData
 ): Promise<SubscriptionState> {
   const formDataObject = Object.fromEntries(formData.entries());
@@ -12,7 +12,7 @@ export default async function subscriptionAction(
   const validationResult = subscriptionFormSchema.safeParse(formDataObject);
 
   if (!validationResult.success) {
-    const validationErrors = formatZodErrors(validationResult.error);
+    const { fieldErrors } = validationResult.error.flatten();
     const blurredFields = blurAllFormFields(subscriptionFormSchema.shape);
 
     return {
@@ -20,7 +20,7 @@ export default async function subscriptionAction(
       message: '',
       form: {
         data: formDataObject as SubscriptionForm,
-        errors: validationErrors,
+        fieldErrors,
         blurs: blurredFields,
       },
     };
@@ -31,7 +31,7 @@ export default async function subscriptionAction(
     message: 'Subscribed!',
     form: {
       data: { email: '' },
-      errors: {},
+      fieldErrors: {},
       blurs: {},
     },
   };

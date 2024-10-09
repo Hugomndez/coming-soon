@@ -3,14 +3,14 @@ import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
-import { type SubscriptionForm } from './subscription-form.schema';
+import { SubscriptionForm } from './subscription-form.schema';
 import { type SubscriptionState, SubscriptionStatus } from './subscription-form.types';
 import { validateForm } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
   status: SubscriptionStatus.Initial,
   message: '',
-  form: { data: { email: '' }, errors: {}, blurs: {} },
+  form: { data: { email: '' }, fieldErrors: {}, blurs: {} },
 };
 
 export default function useSubscriptionForm() {
@@ -38,8 +38,8 @@ export default function useSubscriptionForm() {
       const { name, value } = event.target as { name: keyof SubscriptionForm; value: string };
       setFormState((draft) => {
         draft.form.data[name] = value;
-        const { errors, status } = validateForm(draft.form.data);
-        draft.form.errors = errors;
+        const { fieldErrors, status } = validateForm(draft.form.data);
+        draft.form.fieldErrors = fieldErrors;
         draft.status = status;
       });
     },

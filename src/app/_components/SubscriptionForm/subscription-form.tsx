@@ -20,7 +20,7 @@ export default function SubscriptionForm() {
           onBlur={handleBlur}
           onChange={handleChange}
           value={formState.form.data.email}
-          data-invalid={formState.form.blurs.email && !!formState.form.errors.email}
+          data-invalid={formState.form.blurs.email && !!formState.form.fieldErrors.email}
         />
       </label>
 
@@ -28,8 +28,8 @@ export default function SubscriptionForm() {
 
       <FieldErrorMessage
         className={styles.errorMessage}
-        hasError={formState.form.blurs.email && !!formState.form.errors.email}
-        errorMessage={formState.form.errors.email}
+        hasError={formState.form.blurs.email && !!formState.form.fieldErrors.email}
+        errorMessage={formState.form.fieldErrors.email}
       />
     </form>
   );

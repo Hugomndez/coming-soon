@@ -1,13 +1,12 @@
-import { SubscriptionForm } from './subscription-form.schema';
+import type { FilteredFlattenedErrors, SubscriptionForm } from './subscription-form.schema';
 
 export interface SubscriptionState {
   status: SubscriptionStatus;
   message: string;
   form: {
     data: SubscriptionForm;
-    errors: StringMap;
     blurs: StringToBooleanMap;
-  };
+  } & FilteredFlattenedErrors;
 }
 
 export enum SubscriptionStatus {
@@ -15,10 +14,6 @@ export enum SubscriptionStatus {
   Error = 'error',
   Valid = 'valid',
   Success = 'success',
-}
-
-export interface StringMap {
-  [key: string]: string;
 }
 
 export interface StringToBooleanMap {
