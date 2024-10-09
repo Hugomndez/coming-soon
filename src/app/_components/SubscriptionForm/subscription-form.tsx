@@ -28,8 +28,8 @@ export default function SubscriptionForm() {
 
       <FieldErrorMessage
         className={styles.errorMessage}
-        hasError={formState.form.blurs.email && !!formState.form.fieldErrors.email}
-        errorMessage={formState.form.fieldErrors.email}
+        showError={formState.form.blurs.email && !!formState.form.fieldErrors.email}
+        messages={formState.form.fieldErrors.email}
       />
     </form>
   );

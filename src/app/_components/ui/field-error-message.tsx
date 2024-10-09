@@ -1,9 +1,16 @@
-import { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
+
+type FieldErrorMessageProps = HTMLAttributes<HTMLSpanElement> & {
+  showError: boolean;
+  messages?: string[];
+};
 
 export default function FieldErrorMessage({
-  hasError,
-  errorMessage,
+  showError,
+  messages,
   ...props
-}: HTMLAttributes<HTMLSpanElement> & { hasError: boolean; errorMessage?: string[] }) {
-  return <span {...props}>{hasError ? (errorMessage?.[0] ?? '') : <>&nbsp;</>}</span>;
+}: FieldErrorMessageProps) {
+  const message = messages?.[0] ?? ''; // Display only the first error message if multiple are present
+
+  return <span {...props}>{showError ? message : <>&nbsp;</>}</span>;
 }
