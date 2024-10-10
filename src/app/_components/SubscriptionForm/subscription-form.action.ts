@@ -6,7 +6,7 @@ import { SubscriptionStatus, type SubscriptionState } from './subscription-form.
 import { blurAllFormFields } from './subscription-form.utils';
 
 export default async function subscriptionAction(
-  _: SubscriptionState,
+  _: unknown,
   formData: FormData
 ): Promise<SubscriptionState> {
   const formDataObject = Object.fromEntries(formData.entries());
