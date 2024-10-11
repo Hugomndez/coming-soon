@@ -4,14 +4,13 @@ import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
-import type { FormEventTarget, SubscriptionState } from './subscription-form.types';
-import { SubscriptionStatus } from './subscription-form.types';
+import type { FormEventTarget, FormFocusEvent, SubscriptionState } from './subscription-form.types';
 import { validateForm } from './subscription-form.utils';
 
 const initialState: SubscriptionState = {
-  status: SubscriptionStatus.Initial,
+  status: 'initial',
   message: '',
-  form: { data: { email: '' }, fieldErrors: {}, blurs: {} },
+  form: { data: { email: '' }, fieldErrors: {}, fieldBlurs: {} },
 };
 
 export default function useSubscriptionForm() {
@@ -28,8 +27,8 @@ export default function useSubscriptionForm() {
 
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLInputElement>) => {
-      const { name } = event.target;
-      setFormState((draft) => void (draft.form.blurs[name] = true));
+      const { name } = event.target as FormFocusEvent;
+      setFormState((draft) => void (draft.form.fieldBlurs[name] = true));
     },
     [setFormState]
   );

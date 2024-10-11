@@ -6,6 +6,5 @@ const subscriptionFormSchema = z.object({
 
 export type SubscriptionForm = z.infer<typeof subscriptionFormSchema>;
 export type FlattenedErrors = z.inferFlattenedErrors<typeof subscriptionFormSchema>;
-export type FilteredFlattenedErrors = Omit<FlattenedErrors, 'formErrors'>;
 
 export default subscriptionFormSchema;

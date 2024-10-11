@@ -1,7 +1,7 @@
 'use client';
 import { FieldErrorMessage, SubmitButton } from '@/app/_components/ui';
 import styles from './subscription-form.module.css';
-import useSubscriptionForm from './use-subscription-form';
+import useSubscriptionForm from './use-subscription-form.hook';
 
 export default function SubscriptionForm() {
   const { formState, formAction, handleBlur, handleChange } = useSubscriptionForm();
@@ -20,7 +20,7 @@ export default function SubscriptionForm() {
           onBlur={handleBlur}
           onChange={handleChange}
           value={formState.form.data.email}
-          data-invalid={formState.form.blurs.email && !!formState.form.fieldErrors.email}
+          data-invalid={!!formState.form.fieldBlurs.email && !!formState.form.fieldErrors.email}
         />
       </label>
 
@@ -28,7 +28,7 @@ export default function SubscriptionForm() {
 
       <FieldErrorMessage
         className={styles.errorMessage}
-        showError={formState.form.blurs.email && !!formState.form.fieldErrors.email}
+        showError={!!formState.form.fieldBlurs.email && !!formState.form.fieldErrors.email}
         messages={formState.form.fieldErrors.email}
       />
     </form>

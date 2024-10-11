@@ -1,24 +1,30 @@
-import type { ZodRawShape } from 'zod';
+import type { FlattenedErrors, SubscriptionForm } from './subscription-form.schema';
 import subscriptionFormSchema from './subscription-form.schema';
-import { SubscriptionStatus, type StringToBooleanMap } from './subscription-form.types';
+import type { SubscriptionState } from './subscription-form.types';
 
-export const validateForm = (data: unknown) => {
-  const validationResult = subscriptionFormSchema.safeParse(data);
-  if (!validationResult.success) {
-    const { fieldErrors } = validationResult.error.flatten();
+export const validateForm = (
+  data: SubscriptionForm
+): { fieldErrors: FlattenedErrors['fieldErrors']; status: SubscriptionState['status'] } => {
+  const { error } = subscriptionFormSchema.safeParse(data);
+
+  if (error) {
+    const { fieldErrors } = error.flatten();
     return {
-      fieldErrors,
-      status: SubscriptionStatus.Error,
+      fieldErrors: fieldErrors,
+      status: 'error',
     };
   }
+
   return {
     fieldErrors: {},
-    status: SubscriptionStatus.Valid,
+    status: 'valid',
   };
 };
 
-export const blurAllFormFields = (schema: ZodRawShape): StringToBooleanMap => {
-  const inputNames = Object.keys(schema);
+export const blurFields = (
+  data: FlattenedErrors['fieldErrors']
+): SubscriptionState['form']['fieldBlurs'] => {
+  const inputNames = Object.keys(data);
 
   return Object.fromEntries(inputNames.map((name) => [name, true]));
 };
