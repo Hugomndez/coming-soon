@@ -1,40 +1,41 @@
 'use server';
 
-import type { SubscriptionForm } from './subscription-form.schema';
-import subscriptionFormSchema from './subscription-form.schema';
-import { SubscriptionStatus, type SubscriptionState } from './subscription-form.types';
-import { blurAllFormFields } from './subscription-form.utils';
+import { ValidationError } from '@/entities/errors/common';
+import { createSubscriptionController } from '@/interface-adapters/controllers/subscriptions/create-subscription.controller';
+import type { SubscriptionState } from './subscription-form.types';
+import { blurFields } from './subscription-form.utils';
 
 export default async function subscriptionAction(
   _: unknown,
   formData: FormData
 ): Promise<SubscriptionState> {
-  const formDataObject = Object.fromEntries(formData.entries());
+  const data = Object.fromEntries(formData.entries());
 
-  const validationResult = subscriptionFormSchema.safeParse(formDataObject);
+  try {
+    await createSubscriptionController(data);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      const blurredFields = blurFields(err.fieldErrors);
 
-  if (!validationResult.success) {
-    const { fieldErrors } = validationResult.error.flatten();
-    const blurredFields = blurAllFormFields(subscriptionFormSchema.shape);
-
-    return {
-      status: SubscriptionStatus.Error,
-      message: '',
-      form: {
-        data: formDataObject as unknown as SubscriptionForm,
-        fieldErrors,
-        blurs: blurredFields,
-      },
-    };
+      return {
+        status: 'error',
+        message: 'Failed to subscribe. Please try again later.',
+        form: {
+          data: data as unknown as SubscriptionState['form']['data'],
+          fieldErrors: err.fieldErrors,
+          fieldBlurs: blurredFields,
+        },
+      };
+    }
   }
 
   return {
-    status: SubscriptionStatus.Success,
-    message: 'Subscribed!',
+    status: 'success',
+    message: 'You have successfully subscribed!',
     form: {
       data: { email: '' },
       fieldErrors: {},
-      blurs: {},
+      fieldBlurs: {},
     },
   };
 }
