@@ -6,3 +6,17 @@ export class ValidationError extends Error {
     this.name = 'ValidationError';
   }
 }
+
+export class EmailAlreadySubscribedError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = 'EmailAlreadySubscribedError';
+  }
+}
+
+export class DataBaseOperationError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = 'DataBaseOperationError';
+  }
+}

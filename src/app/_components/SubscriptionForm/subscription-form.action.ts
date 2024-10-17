@@ -1,8 +1,8 @@
 'use server';
 
+import { subscriptionController } from '@/di/container';
 import { ValidationError } from '@/entities/errors/common';
-import { createSubscriptionController } from '@/interface-adapters/controllers/subscriptions/create-subscription.controller';
-import type { SubscriptionState } from './subscription-form.types';
+import type { SubscriptionState } from '@/entities/models/subscription';
 import { blurFields } from './subscription-form.utils';
 
 export default async function subscriptionAction(
@@ -12,17 +12,17 @@ export default async function subscriptionAction(
   const data = Object.fromEntries(formData.entries());
 
   try {
-    await createSubscriptionController(data);
-  } catch (err) {
-    if (err instanceof ValidationError) {
-      const blurredFields = blurFields(err.fieldErrors);
+    await subscriptionController.subscribe(data);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      const blurredFields = blurFields(error.fieldErrors);
 
       return {
         status: 'error',
-        message: 'Failed to subscribe. Please try again later.',
+        message: error.message,
         form: {
           data: data as unknown as SubscriptionState['form']['data'],
-          fieldErrors: err.fieldErrors,
+          fieldErrors: error.fieldErrors,
           fieldBlurs: blurredFields,
         },
       };

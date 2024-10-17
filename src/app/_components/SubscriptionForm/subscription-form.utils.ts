@@ -1,11 +1,13 @@
-import type { FlattenedErrors, SubscriptionForm } from './subscription-form.schema';
-import subscriptionFormSchema from './subscription-form.schema';
-import type { SubscriptionState } from './subscription-form.types';
+import type { SubscriptionState } from '@/entities/models/subscription';
+import { subscriptionSchema } from '@/entities/models/subscription';
 
 export const validateForm = (
-  data: SubscriptionForm
-): { fieldErrors: FlattenedErrors['fieldErrors']; status: SubscriptionState['status'] } => {
-  const { error } = subscriptionFormSchema.safeParse(data);
+  data: SubscriptionState['form']['data']
+): {
+  fieldErrors: SubscriptionState['form']['fieldErrors'];
+  status: SubscriptionState['status'];
+} => {
+  const { error } = subscriptionSchema.safeParse(data);
 
   if (error) {
     const { fieldErrors } = error.flatten();
@@ -22,7 +24,7 @@ export const validateForm = (
 };
 
 export const blurFields = (
-  data: FlattenedErrors['fieldErrors']
+  data: SubscriptionState['form']['fieldErrors']
 ): SubscriptionState['form']['fieldBlurs'] => {
   const inputNames = Object.keys(data);
 
