@@ -19,7 +19,7 @@ export type FormEventTarget = {
 }[keyof SubscriptionData];
 
 export type SubscriptionState = {
-  status: 'initial' | 'error' | 'valid' | 'success';
+  status: 'initial' | 'field-error' | 'valid' | 'success' | 'error';
   message: string;
   form: {
     data: SubscriptionData;

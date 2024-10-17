@@ -13,7 +13,7 @@ export const validateForm = (
     const { fieldErrors } = error.flatten();
     return {
       fieldErrors: fieldErrors,
-      status: 'error',
+      status: 'field-error',
     };
   }
 

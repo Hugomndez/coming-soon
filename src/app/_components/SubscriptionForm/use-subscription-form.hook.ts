@@ -20,6 +20,7 @@ export default function useSubscriptionForm() {
   useEffect(() => {
     const handleStatus: { [key: string]: () => void } = {
       success: () => (setFormState(initialState), toast.success(subscriptionState.message)),
+      error: () => (setFormState(initialState), toast.error(subscriptionState.message)),
       default: () => setFormState(subscriptionState),
     };
     (handleStatus[subscriptionState.status] || handleStatus.default)();

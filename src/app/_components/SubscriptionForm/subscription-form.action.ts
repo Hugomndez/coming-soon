@@ -13,12 +13,21 @@ export default async function subscriptionAction(
 
   try {
     await subscriptionController.subscribe(data);
+    return {
+      status: 'success',
+      message: 'You have successfully subscribed!',
+      form: {
+        data: { email: '' },
+        fieldErrors: {},
+        fieldBlurs: {},
+      },
+    };
   } catch (error) {
     if (error instanceof ValidationError) {
       const blurredFields = blurFields(error.fieldErrors);
 
       return {
-        status: 'error',
+        status: 'field-error',
         message: error.message,
         form: {
           data: data as unknown as SubscriptionState['form']['data'],
@@ -26,16 +35,16 @@ export default async function subscriptionAction(
           fieldBlurs: blurredFields,
         },
       };
+    } else {
+      return {
+        status: 'error',
+        message: 'An error occurred while subscribing. Please try again later.',
+        form: {
+          data: { email: '' },
+          fieldErrors: {},
+          fieldBlurs: {},
+        },
+      };
     }
   }
-
-  return {
-    status: 'success',
-    message: 'You have successfully subscribed!',
-    form: {
-      data: { email: '' },
-      fieldErrors: {},
-      fieldBlurs: {},
-    },
-  };
 }
