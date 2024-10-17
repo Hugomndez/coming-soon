@@ -5,7 +5,7 @@ import { useFormState } from 'react-dom';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
-import { validateForm } from './subscription-form.utils';
+import { validateForm } from './utils';
 
 const initialState: SubscriptionState = {
   status: 'initial',
