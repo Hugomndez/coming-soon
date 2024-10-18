@@ -1,7 +1,6 @@
 import { CreateSubscriptionUseCase } from '@/application/use-cases/subscription/create-subscription.use-case';
-import { MockSubscriptionRepository } from '@/infrastructure/repositories/subscription.repository.mock';
 import { SubscriptionController } from '@/interface-adapters/controllers/subscription/subscription.controller';
+import { DatabaseModule } from './modules/database.module';
 
-const DB = new MockSubscriptionRepository();
-const createSubscriptionUseCase = new CreateSubscriptionUseCase(DB);
+const createSubscriptionUseCase = new CreateSubscriptionUseCase(DatabaseModule);
 export const subscriptionController = new SubscriptionController(createSubscriptionUseCase);

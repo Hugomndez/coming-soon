@@ -2,21 +2,20 @@ import type { ISubscriptionRepository } from '@/application/repositories/subscri
 import { EmailAlreadySubscribedError } from '@/entities/errors/common';
 
 export class CreateSubscriptionUseCase {
-  private _DB: ISubscriptionRepository;
+  private _subscriptionRepository: ISubscriptionRepository;
 
-  constructor(DB: ISubscriptionRepository) {
-    this._DB = DB;
+  constructor(subscriptionRepository: ISubscriptionRepository) {
+    this._subscriptionRepository = subscriptionRepository;
   }
 
   // HINT: this is where you'd do authorization checks - is this user authorized to create a todo
   // for example: free users are allowed only 5 todos, throw an UnauthorizedError if more than 5
 
   async execute(email: string) {
-    if (await this._DB.getSubscriptionByEmail(email)) {
+    if (await this._subscriptionRepository.getSubscriptionByEmail(email)) {
       throw new EmailAlreadySubscribedError('Email already subscribed!');
     }
 
-    await this._DB.createSubscription(email);
-    console.log(this._DB.getAllSubscriptions());
+    await this._subscriptionRepository.createSubscription(email);
   }
 }
