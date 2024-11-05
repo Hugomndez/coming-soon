@@ -5,10 +5,7 @@ import { ValidationError } from '@/entities/errors/common';
 import type { SubscriptionState } from '@/entities/models/subscription';
 import { blurFields } from './utils';
 
-export default async function subscriptionAction(
-  _: unknown,
-  formData: FormData
-): Promise<SubscriptionState> {
+async function subscriptionAction(_: unknown, formData: FormData): Promise<SubscriptionState> {
   const data = Object.fromEntries(formData.entries());
 
   try {
@@ -48,3 +45,5 @@ export default async function subscriptionAction(
     }
   }
 }
+
+export default subscriptionAction;
