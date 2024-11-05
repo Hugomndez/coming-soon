@@ -2,6 +2,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import prettier from 'eslint-plugin-prettier';
+import reactCompiler from 'eslint-plugin-react-compiler';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,7 +24,6 @@ const config = [
       '**/public',
       '**/node_modules',
       '**/next-env.d.ts',
-      '**/next.config.ts',
       '**/yarn.lock',
     ],
   },
@@ -39,6 +39,7 @@ const config = [
     plugins: {
       prettier,
       '@typescript-eslint': typescriptEslint,
+      'react-compiler': reactCompiler,
     },
 
     languageOptions: {
@@ -72,6 +73,7 @@ const config = [
           prefer: 'type-imports',
         },
       ],
+      'react-compiler/react-compiler': 'error',
     },
   },
 ];
