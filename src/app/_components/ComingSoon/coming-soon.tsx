@@ -4,8 +4,6 @@ import { SubscriptionForm } from '../SubscriptionForm';
 import styles from './coming-soon.module.css';
 
 export default function ComingSoon() {
-  const currentYearDate = new Date().getFullYear();
-
   return (
     <main className={styles.main}>
       <div className={styles.content}>
@@ -21,8 +19,20 @@ export default function ComingSoon() {
         <p className={styles.subTitle}>Subscribe and get notified</p>
         <SubscriptionForm />
       </div>
-      <span className={styles.copyright}>
-        &copy; {currentYearDate} Copyright Ping. All rights reserved.
+      <span className={styles.attribution}>
+        Challenge by{' '}
+        <a
+          href='https://www.frontendmentor.io?ref=challenge'
+          target='_blank'>
+          Frontend Mentor
+        </a>
+        . Coded by{' '}
+        <a
+          href='https://hugomendez.dev'
+          target='_blank'>
+          Hugo Méndez
+        </a>
+        .
       </span>
     </main>
   );

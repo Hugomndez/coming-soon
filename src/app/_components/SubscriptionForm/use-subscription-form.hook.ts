@@ -33,8 +33,8 @@ export default function useSubscriptionForm() {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target as FormEventTarget;
     setFormState((draft) => {
-      draft.form.data[name] = value;
       const { fieldErrors, status } = validateForm(draft.form.data);
+      draft.form.data[name] = value;
       draft.form.fieldErrors = fieldErrors;
       draft.status = status;
     });

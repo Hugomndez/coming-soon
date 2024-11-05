@@ -41,10 +41,13 @@
   }
 }
 
-.copyright {
+.attribution {
   margin-block-end: 1cap;
   text-align: center;
   font-size: 1.2rem;
   font-weight: 300;
   color: var(--quaternary-color);
+  & > a {
+    color: var(--quinary-color);
+  }
 }
