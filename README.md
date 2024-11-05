@@ -1,30 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend Mentor - Ping coming soon page solution
 
-## Getting Started
+This is a solution to the [Ping coming soon page challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/ping-single-column-coming-soon-page-5cadd051fec04111f7b848da). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-First, run the development server:
+## Table of contents
 
-```bash
-npm run dev
-```
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### The challenge
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Users should be able to:
 
-## Learn More
+- View the optimal layout for the site depending on their device's screen size
+- See hover states for all interactive elements on the page
+- Submit their email address using an `input` field
+- Receive an error message when the `form` is submitted if:
+  - The `input` field is empty. The message for this error should say _"Whoops! It looks like you forgot to add your email"_
+  - The email address is not formatted correctly (i.e. a correct email address should have this structure: `name@host.tld`). The message for this error should say _"Please provide a valid email address"_
 
-To learn more about Next.js, take a look at the following resources:
+### Screenshot
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![](./screenshot.jpg)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Links
 
-## Deploy on Vercel
+- Solution URL: [https://github.com/Hugomndez/coming-soon](https://github.com/Hugomndez/coming-soon)
+- Live Site URL: [https://coming-soon-rho-ten.vercel.app](https://coming-soon-rho-ten.vercel.app)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## My process
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Built with
+
+- Semantic HTML5 markup
+- CSS custom properties
+- Flexbox
+- CSS Grid
+- Mobile-first workflow
+- [CSS Modules](https://nextjs.org/docs/app/building-your-application/styling/css-modules) - For styles
+- [React](https://reactjs.org/) - JS library
+- [Next.js](https://nextjs.org/) - React framework
+
+### What I learned
+
+I used this simple use case to learn and implement clean architecture with Next.js.
+
+### Useful resources
+
+- [Guide on how to implement clean architecture in NextJS](https://www.youtube.com/watch?v=jJVAla0dWJo&pp=ygUYY2xlYW4gYXF1aXRlY3R1cmUgbmV4dGpz)
+- [Applying clean architecture NextJS project](https://www.youtube.com/watch?v=wnxO4AT2N4o&t=385s&pp=ygUYY2xlYW4gYXF1aXRlY3R1cmUgbmV4dGpz)
+
+## Author
+
+- Website - [Hugo Méndez](https://hugomendez.dev)
+- Frontend Mentor - [@Hugomndez](https://www.frontendmentor.io/profile/Hugomndez)
+- Twitter - [@hugomndez_dev](https://twitter.com/hugomendez_dev)
