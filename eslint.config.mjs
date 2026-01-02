@@ -1,81 +1,40 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import prettier from 'eslint-plugin-prettier';
-import reactCompiler from 'eslint-plugin-react-compiler';
-import globals from 'globals';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
+import prettier from 'eslint-config-prettier/flat';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-const config = [
+const eslintConfig = defineConfig([
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'public/**',
+    'next-env.d.ts',
+    'package-lock.json',
+  ]),
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   {
-    ignores: [
-      '**/.next',
-      '**/.cache',
-      '**/package-lock.json',
-      '**/public',
-      '**/node_modules',
-      '**/next-env.d.ts',
-      '**/yarn.lock',
-    ],
-  },
-  ...compat.extends(
-    'eslint:recommended',
-    'next/core-web-vitals',
-    'plugin:@next/next/recommended',
-    'next/typescript',
-    'plugin:prettier/recommended',
-    'plugin:@typescript-eslint/recommended'
-  ),
-  {
-    plugins: {
-      prettier,
-      '@typescript-eslint': typescriptEslint,
-      'react-compiler': reactCompiler,
-    },
-
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
-
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-
     rules: {
-      'prettier/prettier': [
+      '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          endOfLine: 'auto',
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
         },
       ],
-
-      'react/react-in-jsx-scope': 'off',
-
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-expressions': 'warn',
       '@typescript-eslint/consistent-type-imports': [
         'warn',
         {
           prefer: 'type-imports',
         },
       ],
-      'react-compiler/react-compiler': 'error',
     },
   },
-];
+  prettier,
+]);
 
-export default config;
+export default eslintConfig;
