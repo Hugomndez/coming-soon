@@ -1,6 +1,6 @@
 import type { FormEventTarget, SubscriptionState } from '@/entities/models/subscription';
 import type { ChangeEvent, FocusEvent } from 'react';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useEffectEvent } from 'react';
 import toast from 'react-hot-toast';
 import { useImmer } from 'use-immer';
 import subscriptionAction from './subscription-form.action';
@@ -16,25 +16,40 @@ export default function useSubscriptionForm() {
   const [subscriptionState, formAction] = useActionState(subscriptionAction, initialState);
   const [formState, setFormState] = useImmer<SubscriptionState>(subscriptionState);
 
+  const handleSubscriptionStatus = useEffectEvent((status: SubscriptionState['status']) => {
+    switch (status) {
+      case 'success':
+        setFormState(initialState);
+        toast.success(subscriptionState.message);
+        break;
+      case 'error':
+        setFormState(initialState);
+        toast.error(subscriptionState.message);
+        break;
+      default:
+        setFormState(subscriptionState);
+    }
+  });
+
   useEffect(() => {
-    const handleStatus: { [key: string]: () => void } = {
-      success: () => (setFormState(initialState), toast.success(subscriptionState.message)),
-      error: () => (setFormState(initialState), toast.error(subscriptionState.message)),
-      default: () => setFormState(subscriptionState),
-    };
-    (handleStatus[subscriptionState.status] || handleStatus.default)();
-  }, [subscriptionState, setFormState]);
+    handleSubscriptionStatus(subscriptionState.status);
+  }, [subscriptionState]);
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
     const { name } = event.target as FormEventTarget;
-    setFormState((draft) => void (draft.form.fieldBlurs[name] = true));
+
+    setFormState((draft) => {
+      draft.form.fieldBlurs[name] = true;
+    });
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target as FormEventTarget;
+
     setFormState((draft) => {
-      const { fieldErrors, status } = validateForm(draft.form.data);
       draft.form.data[name] = value;
+
+      const { fieldErrors, status } = validateForm(draft.form.data);
       draft.form.fieldErrors = fieldErrors;
       draft.status = status;
     });

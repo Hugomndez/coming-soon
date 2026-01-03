@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v3';
 
 export const subscriptionSchema = z.object({
   email: z.string().trim().min(1, 'Email is required').email('Please enter a valid email address'),
