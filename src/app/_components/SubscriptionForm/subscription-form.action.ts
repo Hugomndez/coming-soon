@@ -3,13 +3,13 @@
 import { subscriptionController } from '@/di/container';
 import { ValidationError } from '@/entities/errors/common';
 import type { SubscriptionState } from '@/entities/models/subscription';
-import { blurFields } from './utils';
 
 async function subscriptionAction(_: unknown, formData: FormData): Promise<SubscriptionState> {
-  const data = Object.fromEntries(formData.entries());
+  const rawData = Object.fromEntries(formData.entries()) as unknown;
 
   try {
-    await subscriptionController.subscribe(data);
+    await subscriptionController.subscribe(rawData);
+
     return {
       status: 'success',
       message: 'You have successfully subscribed!',
@@ -21,15 +21,13 @@ async function subscriptionAction(_: unknown, formData: FormData): Promise<Subsc
     };
   } catch (error) {
     if (error instanceof ValidationError) {
-      const blurredFields = blurFields(error.fieldErrors);
-
       return {
         status: 'field-error',
         message: error.message,
         form: {
-          data: data as unknown as SubscriptionState['form']['data'],
+          data: rawData as SubscriptionState['form']['data'],
           fieldErrors: error.fieldErrors,
-          fieldBlurs: blurredFields,
+          fieldBlurs: error.fieldBlurs,
         },
       };
     } else {

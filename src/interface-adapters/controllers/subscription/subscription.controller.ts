@@ -14,14 +14,16 @@ export class SubscriptionController {
 
     if (error) {
       const { fieldErrors } = error.flatten();
-      throw new ValidationError('Invalid form data', fieldErrors);
+      const fieldBlurs = Object.fromEntries(Object.keys(fieldErrors).map((name) => [name, true]));
+
+      throw new ValidationError('Invalid form data', fieldErrors, fieldBlurs);
     }
 
     try {
       await this._createSubscriptionUseCase.execute(data.email);
     } catch (error) {
       if (error instanceof EmailAlreadySubscribedError) {
-        throw new ValidationError(error.message, { email: [error.message] });
+        throw new ValidationError(error.message, { email: [error.message] }, { email: true });
       } else {
         throw new Error('An unexpected error occurred');
       }

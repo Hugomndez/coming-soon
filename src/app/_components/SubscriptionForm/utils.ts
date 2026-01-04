@@ -10,9 +10,8 @@ export const validateForm = (
   const { error } = subscriptionSchema.safeParse(data);
 
   if (error) {
-    const { fieldErrors } = error.flatten();
     return {
-      fieldErrors: fieldErrors,
+      fieldErrors: error.flatten().fieldErrors,
       status: 'field-error',
     };
   }
