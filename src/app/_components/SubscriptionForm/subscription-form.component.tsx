@@ -1,5 +1,5 @@
 'use client';
-import { FieldErrorMessage, SubmitButton } from '@/app/_components/ui';
+import { FieldErrorMessage, SubmitButton } from '../ui';
 import styles from './subscription-form.module.css';
 import useSubscriptionForm from './use-subscription-form.hook';
 

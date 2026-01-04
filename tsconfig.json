@@ -16,8 +16,17 @@
     "incremental": true,
     "verbatimModuleSyntax": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
+      "@/fonts": ["./src/app/_fonts"],
+      "@/styles/*": ["./src/app/_styles/*"],
+      "@/components": ["./src/app/_components/index"],
+      "@/application/*": ["./src/application/*"],
+      "@/db": ["./src/db/index"],
+      "@/di/*": ["./src/di/*"],
+      "@/entities/*": ["./src/entities/*"],
+      "@/env/*": ["./src/env/*"],
+      "@/infrastructure/*": ["./src/infrastructure/*"],
+      "@/interface-adapters/*": ["./src/interface-adapters/*"]
     },
     "plugins": [
       {
