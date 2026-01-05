@@ -16,7 +16,7 @@ export class SubscriptionController {
       const { fieldErrors } = error.flatten();
       const fieldBlurs = Object.fromEntries(Object.keys(fieldErrors).map((name) => [name, true]));
 
-      throw new ValidationError('Invalid form data', fieldErrors, fieldBlurs);
+      throw new ValidationError('Invalid form data', { ...fieldErrors }, { ...fieldBlurs });
     }
 
     try {
