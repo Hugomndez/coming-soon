@@ -4,7 +4,8 @@ import styles from './subscription-form.module.css';
 import useSubscriptionForm from './use-subscription-form.hook';
 
 export default function SubscriptionForm() {
-  const { formState, formAction, handleBlur, handleChange } = useSubscriptionForm();
+  const { formState, formAction, formHasErrors, handleBlur, handleChange, isFieldError } =
+    useSubscriptionForm();
 
   return (
     <form
@@ -16,19 +17,20 @@ export default function SubscriptionForm() {
           type='text'
           name='email'
           placeholder='Your email address...'
-          autoComplete='on'
+          autoComplete='email'
           onBlur={handleBlur}
           onChange={handleChange}
           value={formState.form.data.email}
-          data-invalid={!!formState.form.fieldBlurs.email && !!formState.form.fieldErrors.email}
+          data-invalid={isFieldError('email')}
         />
       </label>
-
-      <SubmitButton defaultText='Notify Me' />
-
+      <SubmitButton
+        defaultText='Notify Me'
+        disabled={formHasErrors}
+      />
       <FieldErrorMessage
         className={styles.errorMessage}
-        showError={!!formState.form.fieldBlurs.email && !!formState.form.fieldErrors.email}
+        showError={isFieldError('email')}
         messages={formState.form.fieldErrors.email}
       />
     </form>
