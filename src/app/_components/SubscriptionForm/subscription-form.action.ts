@@ -5,19 +5,15 @@ import { ValidationError } from '@/entities/errors/common';
 import type { SubscriptionState } from '@/entities/models/subscription';
 
 async function subscriptionAction(_: unknown, formData: FormData): Promise<SubscriptionState> {
-  const rawData = Object.fromEntries(formData.entries()) as unknown;
+  const data = { email: formData.get('email') ?? '' };
 
   try {
-    await subscriptionController.subscribe(rawData);
+    await subscriptionController.subscribe(data);
 
     return {
       status: 'success',
       message: 'You have successfully subscribed!',
-      form: {
-        data: { email: '' },
-        fieldErrors: {},
-        fieldBlurs: {},
-      },
+      form: { data: { email: '' }, fieldErrors: {}, fieldBlurs: {} },
     };
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -25,7 +21,7 @@ async function subscriptionAction(_: unknown, formData: FormData): Promise<Subsc
         status: 'field-error',
         message: error.message,
         form: {
-          data: rawData as SubscriptionState['form']['data'],
+          data: data as SubscriptionState['form']['data'],
           fieldErrors: error.fieldErrors,
           fieldBlurs: error.fieldBlurs,
         },
@@ -34,11 +30,7 @@ async function subscriptionAction(_: unknown, formData: FormData): Promise<Subsc
       return {
         status: 'error',
         message: 'An error occurred while subscribing. Please try again later.',
-        form: {
-          data: { email: '' },
-          fieldErrors: {},
-          fieldBlurs: {},
-        },
+        form: { data: { email: '' }, fieldErrors: {}, fieldBlurs: {} },
       };
     }
   }
