@@ -16,23 +16,27 @@ export default function useSubscriptionForm() {
   const [subscriptionState, formAction] = useActionState(subscriptionAction, initialState);
   const [formState, setFormState] = useImmer<SubscriptionState>(subscriptionState);
 
-  const handleSubscriptionStatus = useEffectEvent((status: SubscriptionState['status']) => {
-    switch (status) {
-      case 'success':
-        setFormState(initialState);
-        toast.success(subscriptionState.message);
-        break;
-      case 'error':
-        setFormState(initialState);
-        toast.error(subscriptionState.message);
-        break;
-      default:
-        setFormState(subscriptionState);
+  const handleSubscriptionResponse = useEffectEvent((status: SubscriptionState['status']) => {
+    if (status === 'field-error') {
+      setFormState(subscriptionState);
+      return;
+    }
+
+    if (status === 'error') {
+      setFormState(subscriptionState);
+      toast.error(subscriptionState.message);
+      return;
+    }
+
+    if (status === 'success') {
+      setFormState(initialState);
+      toast.success(subscriptionState.message);
+      return;
     }
   });
 
   useEffect(() => {
-    handleSubscriptionStatus(subscriptionState.status);
+    handleSubscriptionResponse(subscriptionState.status);
   }, [subscriptionState]);
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
@@ -55,10 +59,18 @@ export default function useSubscriptionForm() {
     });
   };
 
+  const formHasErrors = formState.status === 'field-error' || formState.status === 'error';
+
+  const isFieldError = (name: keyof SubscriptionState['form']['fieldErrors']) => {
+    return !!formState.form.fieldBlurs[name] && !!formState.form.fieldErrors[name];
+  };
+
   return {
     formState,
     formAction,
+    formHasErrors,
     handleBlur,
     handleChange,
+    isFieldError,
   };
 }

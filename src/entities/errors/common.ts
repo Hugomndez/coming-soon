@@ -1,8 +1,15 @@
 export class ValidationError extends Error {
   fieldErrors: Record<string, string[]>;
-  constructor(message: string, fieldErrors: Record<string, string[]>, options?: ErrorOptions) {
+  fieldBlurs: Record<string, boolean>;
+  constructor(
+    message: string,
+    fieldErrors: Record<string, string[]>,
+    fieldBlurs: Record<string, boolean>,
+    options?: ErrorOptions
+  ) {
     super(message, options);
     this.fieldErrors = fieldErrors;
+    this.fieldBlurs = fieldBlurs;
     this.name = 'ValidationError';
   }
 }

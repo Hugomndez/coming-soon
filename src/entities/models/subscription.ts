@@ -4,26 +4,26 @@ export const subscriptionSchema = z.object({
   email: z.string().trim().min(1, 'Email is required').email('Please enter a valid email address'),
 });
 
-export type SubscriptionData = z.infer<typeof subscriptionSchema>;
-export type SubscriptionErrors = z.inferFlattenedErrors<typeof subscriptionSchema>;
+export type SubscriptionInput = z.infer<typeof subscriptionSchema>;
+export type FieldErrors = z.inferFlattenedErrors<typeof subscriptionSchema>['fieldErrors'];
 
 export type FieldBlurs = {
-  [K in keyof SubscriptionErrors['fieldErrors']]: boolean;
+  [K in keyof FieldErrors]: boolean;
 };
 
 export type FormEventTarget = {
-  [K in keyof SubscriptionData]: {
+  [K in keyof SubscriptionInput]: {
     name: K;
-    value: SubscriptionData[K];
+    value: SubscriptionInput[K];
   };
-}[keyof SubscriptionData];
+}[keyof SubscriptionInput];
 
 export type SubscriptionState = {
   status: 'initial' | 'field-error' | 'valid' | 'success' | 'error';
   message: string;
   form: {
-    data: SubscriptionData;
-    fieldErrors: SubscriptionErrors['fieldErrors'];
+    data: SubscriptionInput;
+    fieldErrors: FieldErrors;
     fieldBlurs: FieldBlurs;
   };
 };

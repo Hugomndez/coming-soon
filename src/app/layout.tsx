@@ -1,7 +1,7 @@
+import { libreFranklin } from '@/fonts';
+import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
-import { libreFranklin } from './_fonts';
-import './_styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'Coming Soon!',
