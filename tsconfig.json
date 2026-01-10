@@ -19,7 +19,7 @@
       "@/public/*": ["./public/*"],
       "@/fonts": ["./src/app/_fonts"],
       "@/styles/*": ["./src/app/_styles/*"],
-      "@/components": ["./src/app/_components/index"],
+      "@/components/*": ["./src/app/_components/*"],
       "@/application/*": ["./src/application/*"],
       "@/db": ["./src/db/index"],
       "@/di/*": ["./src/di/*"],
